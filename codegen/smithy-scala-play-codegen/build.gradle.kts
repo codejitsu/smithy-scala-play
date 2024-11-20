@@ -8,6 +8,7 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    scala
 }
 
 repositories {
@@ -25,6 +26,10 @@ dependencies {
     implementation(libs.guava)
 }
 
+dependencies {
+    implementation(libs.scala.library)
+}
+
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
@@ -34,7 +39,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "org.example.App"
+    mainClass = "net.codejitsu.smithy.codegen.SmithyScalaPlayCodegenPlugin"
 }
 
 tasks.named<Test>("test") {
