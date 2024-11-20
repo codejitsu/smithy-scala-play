@@ -30,6 +30,12 @@ dependencies {
     implementation(libs.scala.library)
 }
 
+dependencies {
+    implementation(libs.smithy.model)
+    implementation(libs.smithy.codegen.core)
+    implementation(libs.smithy.utils)
+}
+
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
@@ -39,7 +45,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "net.codejitsu.smithy.codegen.SmithyScalaPlayCodegenPlugin"
+    mainClass = "net.codejitsu.smithy.codegen.scala.SmithyScalaPlayCodegenPlugin"
 }
 
 tasks.named<Test>("test") {

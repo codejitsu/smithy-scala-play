@@ -1,4 +1,4 @@
-package net.codejitsu.smithy.codegen
+package net.codejitsu.smithy.codegen.scala
 
 object SmithyScalaPlayCodegenPlugin {
   def main(args: Array[String]): Unit = {
