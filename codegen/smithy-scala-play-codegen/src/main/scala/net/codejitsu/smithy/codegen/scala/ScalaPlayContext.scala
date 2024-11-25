@@ -6,16 +6,11 @@ import software.amazon.smithy.model.Model
 
 import java.util
 
-class ScalaPlayContext extends CodegenContext[ScalaPlaySettings, ScalaPlayWriter, ScalaPlayIntegration] {
-  override def model(): Model = ???
-
-  override def settings(): ScalaPlaySettings = ???
-
-  override def symbolProvider(): SymbolProvider = ???
-
-  override def fileManifest(): FileManifest = ???
-
-  override def writerDelegator(): WriterDelegator[ScalaPlayWriter] = ???
-
-  override def integrations(): util.List[ScalaPlayIntegration] = ???
-}
+case class ScalaPlayContext(
+    model: Model,
+    settings: ScalaPlaySettings,
+    symbolProvider: SymbolProvider,
+    fileManifest: FileManifest,
+    writerDelegator: WriterDelegator[ScalaPlayWriter],
+    integrations: util.List[ScalaPlayIntegration]
+  ) extends CodegenContext[ScalaPlaySettings, ScalaPlayWriter, ScalaPlayIntegration] { }

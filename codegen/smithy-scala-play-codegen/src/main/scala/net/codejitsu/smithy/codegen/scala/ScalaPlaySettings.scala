@@ -1,5 +1,5 @@
 package net.codejitsu.smithy.codegen.scala
 
-class ScalaPlaySettings {
+import software.amazon.smithy.model.shapes.ShapeId
 
-}
+case class ScalaPlaySettings(service: ShapeId)

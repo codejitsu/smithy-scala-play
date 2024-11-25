@@ -24,6 +24,6 @@ class SmithyScalaPlayCodegenPluginTest {
 
     new SmithyScalaPlayCodegenPlugin().execute(pluginContext)
 
-    //TODO assertTrue(manifest.hasFile("GetPokemonInput.scala"))
+    assertTrue(manifest.hasFile("GetPokemonInput.scala"))
   }
 }
