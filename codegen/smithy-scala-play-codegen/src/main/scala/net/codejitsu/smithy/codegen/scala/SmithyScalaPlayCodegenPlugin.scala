@@ -8,7 +8,6 @@ class SmithyScalaPlayCodegenPlugin extends SmithyBuildPlugin {
 
   override def execute(pluginContext: PluginContext): Unit = {
     val codegenDirector = new CodegenDirector[ScalaPlayWriter, ScalaPlayIntegration, ScalaPlayContext, ScalaPlaySettings]
-
     codegenDirector.directedCodegen(new ScalaPlayGenerator())
 
     codegenDirector.integrationClass(classOf[ScalaPlayIntegration])
@@ -16,7 +15,9 @@ class SmithyScalaPlayCodegenPlugin extends SmithyBuildPlugin {
     codegenDirector.fileManifest(pluginContext.getFileManifest)
     codegenDirector.model(pluginContext.getModel)
 
-    val settings = codegenDirector.settings(classOf[ScalaPlaySettings], pluginContext.getSettings)
+    val settings = ScalaPlaySettings.mkSettings(pluginContext.getSettings, pluginContext.getModel)
+
+    codegenDirector.settings(settings)
 
     codegenDirector.service(settings.service)
 

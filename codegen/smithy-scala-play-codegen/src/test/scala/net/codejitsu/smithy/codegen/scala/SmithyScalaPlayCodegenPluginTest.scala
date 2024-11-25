@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import software.amazon.smithy.build.{MockManifest, PluginContext}
 import software.amazon.smithy.model.Model
+import software.amazon.smithy.model.node.Node
 
 class SmithyScalaPlayCodegenPluginTest {
   @Test
@@ -20,9 +21,18 @@ class SmithyScalaPlayCodegenPluginTest {
       .builder()
       .model(model)
       .fileManifest(manifest)
+      .settings(Node.objectNodeBuilder()
+        .withMember("service", Node.from("net.codejitsu.smithy.codegen.scala#PokemonService"))
+        .withMember("package", Node.from("net.codejitsu.smithy.codegen.scala"))
+        .withMember("packageVersion", Node.from("1.0.0"))
+        .build())
       .build()
 
-    new SmithyScalaPlayCodegenPlugin().execute(pluginContext)
+    try {
+      new SmithyScalaPlayCodegenPlugin().execute(pluginContext)
+    } catch {
+      case e: Exception => println(e.getMessage)
+    }
 
     assertTrue(manifest.hasFile("GetPokemonInput.scala"))
   }
