@@ -4,7 +4,9 @@ import software.amazon.smithy.codegen.core.SymbolProvider
 import software.amazon.smithy.codegen.core.directed.{CreateContextDirective, CreateSymbolProviderDirective, DirectedCodegen, GenerateEnumDirective, GenerateErrorDirective, GenerateIntEnumDirective, GenerateServiceDirective, GenerateStructureDirective, GenerateUnionDirective}
 
 class ScalaPlayGenerator extends DirectedCodegen[ScalaPlayContext, ScalaPlaySettings, ScalaPlayIntegration] {
-  override def createSymbolProvider(createSymbolProviderDirective: CreateSymbolProviderDirective[ScalaPlaySettings]): SymbolProvider = ???
+  override def createSymbolProvider(createSymbolProviderDirective: CreateSymbolProviderDirective[ScalaPlaySettings]): SymbolProvider =
+    new ScalaPlaySymbolVisitor(createSymbolProviderDirective.model(),
+      new ScalaSymbolVisitor(createSymbolProviderDirective.model(), createSymbolProviderDirective.settings()))
 
   override def createContext(createContextDirective: CreateContextDirective[ScalaPlaySettings, ScalaPlayIntegration]): ScalaPlayContext = ???
 
