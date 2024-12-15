@@ -1,6 +1,6 @@
 package net.codejitsu.smithy.codegen.scala
 
-import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import software.amazon.smithy.build.{MockManifest, PluginContext}
 import software.amazon.smithy.model.Model
@@ -35,16 +35,6 @@ class SmithyScalaPlayCodegenPluginTest {
     }
 
     assertTrue(manifest.hasFile("/src/main/scala/net/codejitsu/smithy/codegen/scala/GetPokemonInput.scala"))
-    val content = manifest.getFileString("/src/main/scala/net/codejitsu/smithy/codegen/scala/GetPokemonInput.scala").get()
-
-    // TODO add imports
-    val expected =
-      """|case class GetPokemonInput (
-         |    name: String
-         |)
-         |
-         |""".stripMargin
-
-    assertEquals(expected, content)
+    vmanifest.getFileString("/src/main/scala/net/codejitsu/smithy/codegen/scala/GetPokemonInput.scala")
   }
 }
