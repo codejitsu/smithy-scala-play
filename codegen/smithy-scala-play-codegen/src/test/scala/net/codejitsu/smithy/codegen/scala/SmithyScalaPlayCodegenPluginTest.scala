@@ -7,6 +7,27 @@ import software.amazon.smithy.model.Model
 import software.amazon.smithy.model.node.Node
 
 class SmithyScalaPlayCodegenPluginTest {
+  /*
+    The expected project output:
+
+    app
+     └ controllers
+        └ PokemonServiceController.scala
+     └ rules
+        └ PokemonServiceRules.scala
+     └ models
+        └ GetPokemonInput.scala
+        └ GetPokemonOutput.scala
+    build.sbt
+    conf
+     └ application.conf
+     └ routes // GET /pokemons/:name PokemonServiceController.getPokemon(name: String)
+    project
+     └ build.properties
+     └ plugins.sbt
+    test
+  */
+
   @Test
   def testGenerateSimpleService(): Unit = {
     val model = Model
