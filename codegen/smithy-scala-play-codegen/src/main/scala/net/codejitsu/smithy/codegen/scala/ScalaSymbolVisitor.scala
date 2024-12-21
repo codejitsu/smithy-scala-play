@@ -43,7 +43,12 @@ class ScalaSymbolVisitor(model: Model, settings: ScalaPlaySettings) extends Shap
 
   override def shortShape(shape: ShortShape): Symbol = ???
 
-  override def integerShape(shape: IntegerShape): Symbol = ???
+  override def integerShape(shape: IntegerShape): Symbol = {
+    Symbol.builder()
+      .putProperty("shape", shape)
+      .name("Int")
+      .build()
+  }
 
   override def longShape(shape: LongShape): Symbol = ???
 
