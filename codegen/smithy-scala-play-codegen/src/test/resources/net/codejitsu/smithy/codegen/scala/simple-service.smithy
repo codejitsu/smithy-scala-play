@@ -1,5 +1,5 @@
 $version: "2"
-namespace net.codejitsu.smithy.codegen.scala
+namespace net.codejitsu.smithy
 
 @input
 structure GetPokemonInput {

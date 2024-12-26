@@ -17,19 +17,41 @@ class StructureCodegen(
   def generate(): Unit = {
     logger.info(s"[StructureCodegen]: start 'generate' for ${shape.getId.getName}")
 
+    val isInputShape = model.getOperationShapes.asScala.exists(op => op.getInputShape == shape.getId)
+
     val symbol = symbolProvider.toSymbol(shape)
 
-    writer.openBlock("case class $L (", symbol.getName)
+    writer.write("package ${L}.generated.models", shape.getId.getNamespace)
+    writer.write("")
+    writer.write("import play.api.libs.json.{Json, OWrites}")
+    writer.write("")
+
+    if (isInputShape) {
+      writer.write("import play.api.mvc.PathBindable")
+    }
+
+    writer.openBlock("case class $L(", symbol.getName)
 
     val structureFields = shape.getAllMembers.values()
 
-    structureFields.asScala.foreach { field =>
+    structureFields.asScala.zipWithIndex.foreach { case (field, index) =>
       val fieldName = field.getMemberName
 
-      writer.write("${L}: ${T}", fieldName, symbolProvider.toSymbol(field))
+      if (index != structureFields.size() - 1) {
+        writer.write("${L}: ${T},", fieldName, symbolProvider.toSymbol(field))
+      } else {
+        writer.write("${L}: ${T}", fieldName, symbolProvider.toSymbol(field))
+      }
     }
 
     writer.closeBlock(")")
     writer.write("")
+
+    writer.openBlock("object $L {", symbol.getName)
+
+    writer.write("implicit val ${L}Writes: OWrites[${L}] = Json.writes[${L}]",
+      s"${symbol.getName.head.toLower}${symbol.getName.substring(1)}", symbol.getName, symbol.getName)
+
+    writer.closeBlock("}")
   }
 }

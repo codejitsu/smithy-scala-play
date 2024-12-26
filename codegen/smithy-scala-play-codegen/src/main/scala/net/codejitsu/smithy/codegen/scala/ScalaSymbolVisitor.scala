@@ -111,7 +111,7 @@ class ScalaSymbolVisitor(model: Model, settings: ScalaPlaySettings) extends Shap
     logger.info(s"[ScalaSymbolVisitor]: start 'structureShape' for ${shape.getId.getName}")
 
     val namespace = shape.getId.getNamespace.split("\\.").mkString("/")
-    val pathToFile = s"./src/main/scala/$namespace" // TODO this belongs to config (project structure)
+    val pathToFile = s"./app/$namespace/generated/models" // TODO this belongs to config (project structure)
 
     Symbol.builder()
       .putProperty("shape", shape)

@@ -11,17 +11,18 @@ class SmithyScalaPlayCodegenPluginTest {
     The expected project output:
 
     app
-     └ controllers
+     └ net.codejitsu.smithy.generated.controllers
         └ PokemonServiceController.scala
-     └ rules
+     └ net.codejitsu.smithy.generated.rules
         └ PokemonServiceRules.scala
-     └ models
+        └ PokemonServiceRulesDefaultImpl.scala
+     └ net.codejitsu.smithy.generated.models
         └ GetPokemonInput.scala
         └ GetPokemonOutput.scala
     build.sbt
     conf
      └ application.conf
-     └ routes // GET /pokemons/:name PokemonServiceController.getPokemon(name: String)
+     └ routes // GET /pokemons/:input PokemonServiceController.getPokemon(input: net.codejitsu.smithy.generated.models.GetPokemonInput)
     project
      └ build.properties
      └ plugins.sbt
@@ -43,8 +44,8 @@ class SmithyScalaPlayCodegenPluginTest {
       .model(model)
       .fileManifest(manifest)
       .settings(Node.objectNodeBuilder()
-        .withMember("service", Node.from("net.codejitsu.smithy.codegen.scala#PokemonService"))
-        .withMember("package", Node.from("net.codejitsu.smithy.codegen.scala"))
+        .withMember("service", Node.from("net.codejitsu.smithy#PokemonService"))
+        .withMember("package", Node.from("net.codejitsu.smithy"))
         .withMember("packageVersion", Node.from("1.0.0"))
         .build())
       .build()
@@ -55,17 +56,25 @@ class SmithyScalaPlayCodegenPluginTest {
       case e: Exception => println(e.getMessage)
     }
 
-    assertTrue(manifest.hasFile("/src/main/scala/net/codejitsu/smithy/codegen/scala/GetPokemonInput.scala"))
-    val content = manifest.getFileString("/src/main/scala/net/codejitsu/smithy/codegen/scala/GetPokemonInput.scala").get()
+    // output shape
+    assertTrue(manifest.hasFile("/app/net/codejitsu/smithy/generated/models/GetPokemonOutput.scala"))
+    val contentOutput = manifest.getFileString("/app/net/codejitsu/smithy/generated/models/GetPokemonOutput.scala").get()
 
-    // TODO add imports
-    val expected =
-      """|case class GetPokemonInput (
-         |    name: String
+    val expectedOutput =
+      """|package net.codejitsu.smithy.generated.models
+         |
+         |import play.api.libs.json.{Json, OWrites}
+         |
+         |case class GetPokemonOutput(
+         |    name: String,
+         |    age: Int
          |)
          |
+         |object GetPokemonOutput {
+         |    implicit val getPokemonOutputWrites: OWrites[GetPokemonOutput] = Json.writes[GetPokemonOutput]
+         |}
          |""".stripMargin
 
-    assertEquals(expected, content)
+    assertEquals(expectedOutput, contentOutput)
   }
 }
