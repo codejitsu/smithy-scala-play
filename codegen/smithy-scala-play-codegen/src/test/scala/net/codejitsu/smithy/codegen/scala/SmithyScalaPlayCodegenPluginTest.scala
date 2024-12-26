@@ -56,6 +56,39 @@ class SmithyScalaPlayCodegenPluginTest {
       case e: Exception => println(e.getMessage)
     }
 
+    // input shape
+    assertTrue(manifest.hasFile("/app/net/codejitsu/smithy/generated/models/GetPokemonInput.scala"))
+    val contentInput = manifest.getFileString("/app/net/codejitsu/smithy/generated/models/GetPokemonInput.scala").get()
+
+    val expectedInput =
+     """|package net.codejitsu.smithy.generated.models
+        |
+        |import play.api.libs.json.{Json, OWrites}
+        |import play.api.mvc.PathBindable
+        |
+        |case class GetPokemonInput(
+        |    name: String
+        |)
+        |
+        |object GetPokemonInput {
+        |    implicit val getPokemonInputWrites: OWrites[GetPokemonInput] = Json.writes[GetPokemonInput]
+        |
+        |    implicit def pathBinder(implicit binder: PathBindable[String]): PathBindable[GetPokemonInput] = new PathBindable[GetPokemonInput] {
+        |        override def bind(key: String, value: String): Either[String, GetPokemonInput] = {
+        |            for {
+        |                field <- binder.bind(key, value)
+        |            } yield GetPokemonInput(field)
+        |        }
+        |
+        |        override def unbind(key: String, getPokemonInput: GetPokemonInput): String = {
+        |            getPokemonInput.name
+        |        }
+        |    }
+        |}
+        |""".stripMargin
+
+    assertEquals(expectedInput.replaceAll("\\s+",""), contentInput.replaceAll("\\s+",""))
+
     // output shape
     assertTrue(manifest.hasFile("/app/net/codejitsu/smithy/generated/models/GetPokemonOutput.scala"))
     val contentOutput = manifest.getFileString("/app/net/codejitsu/smithy/generated/models/GetPokemonOutput.scala").get()

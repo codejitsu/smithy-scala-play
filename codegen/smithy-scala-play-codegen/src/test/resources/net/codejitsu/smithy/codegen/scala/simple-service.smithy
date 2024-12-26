@@ -5,6 +5,7 @@ namespace net.codejitsu.smithy
 structure GetPokemonInput {
     @required
     @httpLabel
+    @resourceIdentifier("name")
     name: String,
 }
 
