@@ -13,9 +13,11 @@ class ScalaSymbolVisitor(model: Model, settings: ScalaPlaySettings) extends Shap
   val escaper: ReservedWordSymbolProvider.Escaper = initEscaper()
 
   override def toSymbol(shape: Shape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'toSymbol' for ${shape.getId.getName}")
+
     val symbol = shape.accept(this)
 
-    logger.info(s"Mapping $shape to $symbol")
+    logger.info(s"[ScalaSymbolVisitor]: mapping $shape to $symbol")
 
     escaper.escapeSymbol(shape, symbol)
   }
@@ -44,6 +46,8 @@ class ScalaSymbolVisitor(model: Model, settings: ScalaPlaySettings) extends Shap
   override def shortShape(shape: ShortShape): Symbol = ???
 
   override def integerShape(shape: IntegerShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'integerShape' for ${shape.getId.getName}")
+
     Symbol.builder()
       .putProperty("shape", shape)
       .name("Int")
@@ -63,6 +67,8 @@ class ScalaSymbolVisitor(model: Model, settings: ScalaPlaySettings) extends Shap
   override def bigDecimalShape(shape: BigDecimalShape): Symbol = ???
 
   override def operationShape(shape: OperationShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'operationShape' for ${shape.getId.getName}")
+
     val actionName = shape.getId.getName + "Action"
 
     val symbolAction = Symbol.builder()
@@ -81,6 +87,8 @@ class ScalaSymbolVisitor(model: Model, settings: ScalaPlaySettings) extends Shap
   override def resourceShape(shape: ResourceShape): Symbol = ???
 
   override def serviceShape(shape: ServiceShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'serviceShape' for ${shape.getId.getName}")
+
     val controller = shape.getId.getName + "Controller"
 
     Symbol.builder()
@@ -91,6 +99,8 @@ class ScalaSymbolVisitor(model: Model, settings: ScalaPlaySettings) extends Shap
   }
 
   override def stringShape(shape: StringShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'stringShape' for ${shape.getId.getName}")
+
     Symbol.builder()
       .putProperty("shape", shape)
       .name("String")
@@ -98,6 +108,8 @@ class ScalaSymbolVisitor(model: Model, settings: ScalaPlaySettings) extends Shap
   }
 
   override def structureShape(shape: StructureShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'structureShape' for ${shape.getId.getName}")
+
     val namespace = shape.getId.getNamespace.split("\\.").mkString("/")
     val pathToFile = s"./src/main/scala/$namespace" // TODO this belongs to config (project structure)
 
@@ -112,6 +124,8 @@ class ScalaSymbolVisitor(model: Model, settings: ScalaPlaySettings) extends Shap
   override def unionShape(shape: UnionShape): Symbol = ???
 
   override def memberShape(shape: MemberShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'memberShape' for ${shape.getId.getName}")
+
     val target = model.getShape(shape.getTarget).get // TODO add exception
 
     val targetSymbol = toSymbol(target)
