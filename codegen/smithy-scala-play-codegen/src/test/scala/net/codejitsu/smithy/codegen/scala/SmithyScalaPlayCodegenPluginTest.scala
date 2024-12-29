@@ -252,5 +252,26 @@ class SmithyScalaPlayCodegenPluginTest {
          |""".stripMargin
 
     assertEquals(expectedRoutes.replaceAll("\\s+",""), contentRoutes.replaceAll("\\s+",""))
+
+    // build.properties
+    assertTrue(manifest.hasFile("/project/build.properties"))
+    val contentBuildProperties = manifest.getFileString("/project/build.properties").get()
+
+    val expectedBuildProperties =
+      """|sbt.version=1.10.6
+         |""".stripMargin
+
+    assertEquals(expectedBuildProperties.replaceAll("\\s+",""), contentBuildProperties.replaceAll("\\s+",""))
+
+    // plugins.sbt
+    assertTrue(manifest.hasFile("/project/plugins.sbt"))
+    val contentPluginsSbt = manifest.getFileString("/project/plugins.sbt").get()
+
+    val expectedPluginsSbt =
+      """|addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.9.6")
+         |addSbtPlugin("org.foundweekends.giter8" % "sbt-giter8-scaffold" % "0.17.0")
+         |""".stripMargin
+
+    assertEquals(expectedPluginsSbt.replaceAll("\\s+",""), contentPluginsSbt.replaceAll("\\s+",""))
   }
 }

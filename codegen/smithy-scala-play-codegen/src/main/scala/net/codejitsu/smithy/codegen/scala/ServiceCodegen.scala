@@ -255,5 +255,34 @@ class ServiceCodegen(
           s"${shape.getId.getNamespace}.generated.models.${operation.getInputShape.getName}")
       }
     })
+
+    // build.properties
+    val pathToBuildProperties = s"./project/build.properties" // TODO this belongs to config (project structure)
+
+    writerDelegator.useFileWriter(pathToBuildProperties, (writer: ScalaPlayWriter) => {
+      // TODO config
+      // TODO mustache
+      val content =
+        s"""
+           |sbt.version=1.10.6
+           |""".stripMargin
+
+      writer.write(content)
+    })
+
+    // plugins.sbt
+    val pathToPluginsSbt = s"./project/plugins.sbt" // TODO this belongs to config (project structure)
+
+    writerDelegator.useFileWriter(pathToPluginsSbt, (writer: ScalaPlayWriter) => {
+      // TODO config
+      // TODO mustache
+      val content =
+        s"""
+           |addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.9.6")
+           |addSbtPlugin("org.foundweekends.giter8" % "sbt-giter8-scaffold" % "0.17.0")
+           |""".stripMargin
+
+      writer.write(content)
+    })
   }
 }
