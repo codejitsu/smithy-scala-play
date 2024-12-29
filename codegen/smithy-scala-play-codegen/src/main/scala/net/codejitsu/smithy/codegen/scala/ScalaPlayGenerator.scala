@@ -23,6 +23,18 @@ class ScalaPlayGenerator extends DirectedCodegen[ScalaPlayContext, ScalaPlaySett
 
   override def generateService(generateServiceDirective: GenerateServiceDirective[ScalaPlayContext, ScalaPlaySettings]): Unit = {
     logger.info(s"[ScalaPlayGenerator]: start 'generateService'")
+
+    generateServiceDirective.context().writerDelegator.useShapeWriter(generateServiceDirective.shape(), writer => {
+      val generator = new ServiceCodegen(
+        generateServiceDirective.shape(),
+        generateServiceDirective.symbolProvider(),
+        writer,
+        generateServiceDirective.model(),
+        generateServiceDirective.context().writerDelegator,
+        generateServiceDirective)
+
+      generator.generate()
+    })
   }
 
   override def generateStructure(generateStructureDirective: GenerateStructureDirective[ScalaPlayContext, ScalaPlaySettings]): Unit = {

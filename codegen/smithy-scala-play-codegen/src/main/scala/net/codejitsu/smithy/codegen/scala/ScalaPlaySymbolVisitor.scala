@@ -27,8 +27,7 @@ class ScalaPlaySymbolVisitor(model: Model, symbolProvider: SymbolProvider) exten
   override def serviceShape(shape: ServiceShape): Symbol = {
     logger.info(s"[ScalaPlaySymbolVisitor]: start 'serviceShape' for ${shape.getId.getName}")
 
-    val base = shape.getId.getName
-    val service = base + "Service"
+    val service = shape.getId.getName
     val namespace = shape.getId.getNamespace
 
     val intermediate = Symbol.builder()
@@ -49,7 +48,7 @@ class ScalaPlaySymbolVisitor(model: Model, symbolProvider: SymbolProvider) exten
     builder.putProperty("operations",
       intermediate.toBuilder.name(service + "Operations").build())
     builder.putProperty("handler",
-      intermediate.toBuilder.name(service + "Handler").build())
+      intermediate.toBuilder.name(service + "Controller").build())
     builder.build()
   }
 
