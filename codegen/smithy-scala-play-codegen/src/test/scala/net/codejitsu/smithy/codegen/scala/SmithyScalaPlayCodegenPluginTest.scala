@@ -178,6 +178,8 @@ class SmithyScalaPlayCodegenPluginTest {
          |
          |""".stripMargin
 
+    assertEquals(expectedController.replaceAll("\\s+",""), contentController.replaceAll("\\s+",""))
+
     // default error handler
     assertTrue(manifest.hasFile("/app/net/codejitsu/smithy/generated/util/ErrorHandler.scala"))
     val contentHandler = manifest.getFileString("/app/net/codejitsu/smithy/generated/util/ErrorHandler.scala").get()
