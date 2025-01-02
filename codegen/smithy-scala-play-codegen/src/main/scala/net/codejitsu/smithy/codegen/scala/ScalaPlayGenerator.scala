@@ -16,11 +16,11 @@ class ScalaPlayGenerator extends DirectedCodegen[ScalaPlayContext, ScalaPlaySett
   val logger: Logger = Logger.getLogger(classOf[ScalaPlayGenerator].getName)
 
   override def createSymbolProvider(createSymbolProviderDirective: CreateSymbolProviderDirective[ScalaPlaySettings]): SymbolProvider = {
-    new ScalaPlaySymbolVisitor(new ScalaSymbolVisitor(createSymbolProviderDirective.model(), createSymbolProviderDirective.settings()))
+    new ScalaPlaySymbolVisitor(new ScalaSymbolVisitor(createSymbolProviderDirective.model()))
   }
 
   override def createContext(createContextDirective: CreateContextDirective[ScalaPlaySettings, ScalaPlayIntegration]): ScalaPlayContext = {
-    val visitor = new ScalaSymbolVisitor(createContextDirective.model(), createContextDirective.settings())
+    val visitor = new ScalaSymbolVisitor(createContextDirective.model())
     val symbolProvider = new ScalaPlaySymbolVisitor(visitor)
 
     ScalaPlayContext(createContextDirective.model(), createContextDirective.settings(), symbolProvider, createContextDirective.fileManifest(),

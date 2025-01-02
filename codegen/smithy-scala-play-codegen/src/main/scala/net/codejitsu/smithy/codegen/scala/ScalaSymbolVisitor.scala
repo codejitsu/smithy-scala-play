@@ -5,12 +5,13 @@ import software.amazon.smithy.model.Model
 import software.amazon.smithy.model.shapes.{BigDecimalShape, BigIntegerShape, BlobShape, BooleanShape, ByteShape, DocumentShape, DoubleShape, FloatShape, IntegerShape, ListShape, LongShape, MapShape, MemberShape, OperationShape, ResourceShape, ServiceShape, Shape, ShapeVisitor, ShortShape, StringShape, StructureShape, TimestampShape, UnionShape}
 import software.amazon.smithy.utils.StringUtils
 
+import java.nio.file.Paths
 import java.util.logging.Logger;
 
-class ScalaSymbolVisitor(model: Model, settings: ScalaPlaySettings) extends ShapeVisitor[Symbol] with SymbolProvider {
-  val logger = Logger.getLogger(classOf[ScalaSymbolVisitor].getName)
+class ScalaSymbolVisitor(model: Model) extends ShapeVisitor[Symbol] with SymbolProvider {
+  val logger: Logger = Logger.getLogger(classOf[ScalaSymbolVisitor].getName)
 
-  val escaper: ReservedWordSymbolProvider.Escaper = initEscaper()
+  private val escaper: ReservedWordSymbolProvider.Escaper = initEscaper()
 
   override def toSymbol(shape: Shape): Symbol = {
     logger.info(s"[ScalaSymbolVisitor]: start 'toSymbol' for ${shape.getId.getName}")
@@ -110,14 +111,14 @@ class ScalaSymbolVisitor(model: Model, settings: ScalaPlaySettings) extends Shap
   override def structureShape(shape: StructureShape): Symbol = {
     logger.info(s"[ScalaSymbolVisitor]: start 'structureShape' for ${shape.getId.getName}")
 
-    val namespace = shape.getId.getNamespace.split("\\.").mkString("/")
-    val pathToFile = s"./app/$namespace/generated/models" // TODO this belongs to config (project structure)
+    val namespace = Array("app") ++ shape.getId.getNamespace.split("\\.") ++ Array("generated", "models", s"${shape.getId.getName}.scala")
+    val pathToFile = Paths.get(".", namespace: _*).toString // TODO this belongs to config (project structure)
 
     Symbol.builder()
       .putProperty("shape", shape)
       .name(shape.getId.getName)
       .namespace(shape.getId.getNamespace, ".")
-      .definitionFile(s"$pathToFile/${shape.getId.getName}.scala")
+      .definitionFile(pathToFile)
       .build()
   }
 
