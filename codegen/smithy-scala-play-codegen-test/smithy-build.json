@@ -1,0 +1,39 @@
+{
+    "version": "1.0",
+    "projections": {
+        "pokemon-service": {
+            "transforms": [
+                {
+                    "name": "includeServices",
+                    "args": {
+                        "services": [
+                            "codejitsu#PokemonService"
+                        ]
+                    }
+                }
+            ],
+            "plugins": {
+                "scala-play-server-codegen": {
+                    "service": "codejitsu#PokemonService",
+                    "package": "pokemon",
+                    "packageVersion": "0.0.1",
+                    "packageJson": {
+                        "license": "Apache-2.0",
+                        "private": true
+                    }
+                }
+            }
+        }
+    },
+    "plugins": {
+        "scala-play-server-codegen": {
+            "service": "codejitsu#PokemonService",
+            "package": "pokemon",
+            "packageVersion": "0.0.1",
+            "packageJson": {
+                "license": "Apache-2.0",
+                "private": true
+            }
+        }
+    }
+}
