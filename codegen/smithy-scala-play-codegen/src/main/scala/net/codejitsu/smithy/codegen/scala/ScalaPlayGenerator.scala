@@ -158,7 +158,7 @@ class ScalaPlayGenerator extends DirectedCodegen[ScalaPlayContext, ScalaPlaySett
         writer,
         generateStructureDirective.model())
 
-      generator.generate()
+      generator.generateCaseClass()
     })
   }
 

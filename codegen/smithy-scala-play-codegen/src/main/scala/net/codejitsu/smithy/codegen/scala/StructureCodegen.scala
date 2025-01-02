@@ -8,20 +8,20 @@ import java.util.logging.Logger
 import scala.jdk.CollectionConverters.IterableHasAsScala
 
 class StructureCodegen(
-  val shape: StructureShape,
+  val structureShape: StructureShape,
   val symbolProvider: SymbolProvider,
   val writer: ScalaPlayWriter,
   val model: Model) {
-  val logger = Logger.getLogger(classOf[StructureCodegen].getName)
+  val logger: Logger = Logger.getLogger(classOf[StructureCodegen].getName)
 
-  def generate(): Unit = {
-    logger.info(s"[StructureCodegen]: start 'generate' for ${shape.getId.getName}")
+  def generateCaseClass(): Unit = {
+    logger.info(s"[StructureCodegen]: start 'generate' for ${structureShape.getId.getName}")
 
-    val isInputShape = model.getOperationShapes.asScala.exists(op => op.getInputShape == shape.getId)
+    val isInputShape = model.getOperationShapes.asScala.exists(op => op.getInputShape == structureShape.getId)
+    val symbol = symbolProvider.toSymbol(structureShape)
+    val structureFields = structureShape.getAllMembers.values()
 
-    val symbol = symbolProvider.toSymbol(shape)
-
-    writer.write("package ${L}.generated.models", shape.getId.getNamespace)
+    writer.write("package ${L}.generated.models", structureShape.getId.getNamespace)
     writer.write("")
     writer.write("import play.api.libs.json.{Json, OWrites}")
 
@@ -32,8 +32,6 @@ class StructureCodegen(
     writer.write("")
 
     writer.openBlock("case class $L(", symbol.getName)
-
-    val structureFields = shape.getAllMembers.values()
 
     structureFields.asScala.zipWithIndex.foreach { case (field, index) =>
       val fieldName = field.getMemberName
@@ -54,7 +52,7 @@ class StructureCodegen(
       s"${symbol.getName.head.toLower}${symbol.getName.substring(1)}", symbol.getName, symbol.getName)
 
     if (isInputShape) {
-      val identifier = shape.getAllMembers.values().asScala.find(member => member.hasTrait("resourceIdentifier"))
+      val identifier = structureShape.getAllMembers.values().asScala.find(member => member.hasTrait("resourceIdentifier"))
 
       identifier.foreach { id =>
         writer.write("")
