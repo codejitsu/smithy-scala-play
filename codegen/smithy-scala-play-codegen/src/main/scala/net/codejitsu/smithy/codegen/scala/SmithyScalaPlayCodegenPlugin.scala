@@ -6,7 +6,7 @@ import software.amazon.smithy.codegen.core.directed.CodegenDirector
 import java.util.logging.Logger
 
 class SmithyScalaPlayCodegenPlugin extends SmithyBuildPlugin {
-  val logger = Logger.getLogger(classOf[SmithyScalaPlayCodegenPlugin].getName)
+  val logger: Logger = Logger.getLogger(classOf[SmithyScalaPlayCodegenPlugin].getName)
 
   override def getName: String = "scala-play-server-codegen"
 
