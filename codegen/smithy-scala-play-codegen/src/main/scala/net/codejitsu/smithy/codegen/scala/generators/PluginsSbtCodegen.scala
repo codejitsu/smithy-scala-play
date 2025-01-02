@@ -1,17 +1,15 @@
 package net.codejitsu.smithy.codegen.scala.generators
 
-import net.codejitsu.smithy.codegen.scala.ScalaPlayWriter
-import software.amazon.smithy.model.shapes.ServiceShape
+import net.codejitsu.smithy.codegen.scala.{ScalaPlayContext, ScalaPlaySettings, ScalaPlayWriter}
+import software.amazon.smithy.codegen.core.directed.GenerateServiceDirective
 
 import java.util.logging.Logger
 
-class PluginsSbtCodegen(
-  val serviceShape: ServiceShape,
-  val writer: ScalaPlayWriter) {
-  val logger: Logger = Logger.getLogger(classOf[PluginsSbtCodegen].getName)
+object PluginsSbtCodegen {
+  val logger: Logger = Logger.getLogger(classOf[PluginsSbtCodegen.type].getName)
 
-  def generatePluginsSbt(): Unit = {
-    logger.info(s"[PluginsSbtCodegen]: start 'generate' for ${serviceShape.getId.getName}")
+  def generatePluginsSbt(directive: GenerateServiceDirective[ScalaPlayContext, ScalaPlaySettings], writer: ScalaPlayWriter): Unit = {
+    logger.info(s"[PluginsSbtCodegen]: start 'generate' for ${directive.shape.getId.getName}")
 
     // TODO config
     // TODO mustache

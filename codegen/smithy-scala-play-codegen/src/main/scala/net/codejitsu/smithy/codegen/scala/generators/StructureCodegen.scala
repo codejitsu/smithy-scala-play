@@ -1,27 +1,22 @@
-package net.codejitsu.smithy.codegen.scala
+package net.codejitsu.smithy.codegen.scala.generators
 
-import software.amazon.smithy.codegen.core.SymbolProvider
-import software.amazon.smithy.model.Model
-import software.amazon.smithy.model.shapes.StructureShape
+import net.codejitsu.smithy.codegen.scala.{ScalaPlayContext, ScalaPlaySettings, ScalaPlayWriter}
+import software.amazon.smithy.codegen.core.directed.GenerateStructureDirective
 
 import java.util.logging.Logger
 import scala.jdk.CollectionConverters.IterableHasAsScala
 
-class StructureCodegen(
-  val structureShape: StructureShape,
-  val symbolProvider: SymbolProvider,
-  val writer: ScalaPlayWriter,
-  val model: Model) {
-  val logger: Logger = Logger.getLogger(classOf[StructureCodegen].getName)
+object StructureCodegen {
+  val logger: Logger = Logger.getLogger(classOf[StructureCodegen.type].getName)
 
-  def generateCaseClass(): Unit = {
-    logger.info(s"[StructureCodegen]: start 'generate' for ${structureShape.getId.getName}")
+  def generateCaseClass(directive: GenerateStructureDirective[ScalaPlayContext, ScalaPlaySettings], writer: ScalaPlayWriter): Unit = {
+    logger.info(s"[StructureCodegen]: start 'generate' for ${directive.shape.getId.getName}")
 
-    val isInputShape = model.getOperationShapes.asScala.exists(op => op.getInputShape == structureShape.getId)
-    val symbol = symbolProvider.toSymbol(structureShape)
-    val structureFields = structureShape.getAllMembers.values()
+    val isInputShape = directive.model.getOperationShapes.asScala.exists(op => op.getInputShape == directive.shape.getId)
+    val symbol = directive.symbolProvider.toSymbol(directive.shape)
+    val structureFields = directive.shape.getAllMembers.values()
 
-    writer.write("package ${L}.generated.models", structureShape.getId.getNamespace)
+    writer.write("package ${L}.generated.models", directive.shape.getId.getNamespace)
     writer.write("")
     writer.write("import play.api.libs.json.{Json, OWrites}")
 
@@ -37,9 +32,9 @@ class StructureCodegen(
       val fieldName = field.getMemberName
 
       if (index != structureFields.size() - 1) {
-        writer.write("${L}: ${T},", fieldName, symbolProvider.toSymbol(field))
+        writer.write("${L}: ${T},", fieldName, directive.symbolProvider.toSymbol(field))
       } else {
-        writer.write("${L}: ${T}", fieldName, symbolProvider.toSymbol(field))
+        writer.write("${L}: ${T}", fieldName, directive.symbolProvider.toSymbol(field))
       }
     }
 
@@ -52,12 +47,12 @@ class StructureCodegen(
       s"${symbol.getName.head.toLower}${symbol.getName.substring(1)}", symbol.getName, symbol.getName)
 
     if (isInputShape) {
-      val identifier = structureShape.getAllMembers.values().asScala.find(member => member.hasTrait("resourceIdentifier"))
+      val identifier = directive.shape.getAllMembers.values().asScala.find(member => member.hasTrait("resourceIdentifier"))
 
       identifier.foreach { id =>
         writer.write("")
 
-        val idType = symbolProvider.toSymbol(id)
+        val idType = directive.symbolProvider.toSymbol(id)
 
         writer.openBlock("implicit def pathBinder(implicit binder: PathBindable[$T]): PathBindable[$L] = new PathBindable[$L] {", idType, symbol.getName, symbol.getName)
         writer.openBlock("override def bind(key: String, value: String): Either[String, $L] = {", symbol.getName)

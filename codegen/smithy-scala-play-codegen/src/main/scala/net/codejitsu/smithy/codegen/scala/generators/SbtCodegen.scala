@@ -1,24 +1,18 @@
 package net.codejitsu.smithy.codegen.scala.generators
 
-import net.codejitsu.smithy.codegen.scala.ScalaPlayWriter
-import software.amazon.smithy.codegen.core.SymbolProvider
-import software.amazon.smithy.model.Model
-import software.amazon.smithy.model.shapes.ServiceShape
+import net.codejitsu.smithy.codegen.scala.{ScalaPlayContext, ScalaPlaySettings, ScalaPlayWriter}
+import software.amazon.smithy.codegen.core.directed.GenerateServiceDirective
 
 import java.util.logging.Logger
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
-class SbtCodegen(
-  val serviceShape: ServiceShape,
-  val symbolProvider: SymbolProvider,
-  val writer: ScalaPlayWriter,
-  val model: Model) {
-  val logger: Logger = Logger.getLogger(classOf[SbtCodegen].getName)
+object SbtCodegen {
+  val logger: Logger = Logger.getLogger(classOf[SbtCodegen.type].getName)
 
-  def generateSbt(): Unit = {
-    logger.info(s"[SbtCodegen]: start 'generate' for ${serviceShape.getId.getName}")
+  def generateSbt(directive: GenerateServiceDirective[ScalaPlayContext, ScalaPlaySettings], writer: ScalaPlayWriter): Unit = {
+    logger.info(s"[SbtCodegen]: start 'generate' for ${directive.shape.getId.getName}")
 
-    val service = symbolProvider.toSymbol(model.getServiceShapes.asScala.head)
+    val service = directive.symbolProvider.toSymbol(directive.model.getServiceShapes.asScala.head)
 
     // TODO config
     // TODO mustache

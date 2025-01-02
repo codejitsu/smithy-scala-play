@@ -1,36 +1,30 @@
 package net.codejitsu.smithy.codegen.scala.generators
 
-import net.codejitsu.smithy.codegen.scala.ScalaPlayWriter
-import software.amazon.smithy.codegen.core.SymbolProvider
-import software.amazon.smithy.model.Model
+import net.codejitsu.smithy.codegen.scala.{ScalaPlayContext, ScalaPlaySettings, ScalaPlayWriter}
+import software.amazon.smithy.codegen.core.directed.GenerateServiceDirective
 import software.amazon.smithy.model.knowledge.TopDownIndex
-import software.amazon.smithy.model.shapes.ServiceShape
 
 import java.util.logging.Logger
 import scala.jdk.CollectionConverters.SetHasAsScala
 
-class DefaultBusinessLogicImplCodegen(
-  val serviceShape: ServiceShape,
-  val symbolProvider: SymbolProvider,
-  val writer: ScalaPlayWriter,
-  val model: Model) {
-  val logger: Logger = Logger.getLogger(classOf[DefaultBusinessLogicImplCodegen].getName)
+object DefaultBusinessLogicImplCodegen{
+  val logger: Logger = Logger.getLogger(classOf[DefaultBusinessLogicImplCodegen.type].getName)
 
-  def generateDefaultBusinessLogicImpl(): Unit = {
-    logger.info(s"[DefaultRulesImplCodegen]: start 'generate' for ${serviceShape.getId.getName}")
+  def generateDefaultBusinessLogicImpl(directive: GenerateServiceDirective[ScalaPlayContext, ScalaPlaySettings], writer: ScalaPlayWriter): Unit = {
+    logger.info(s"[DefaultRulesImplCodegen]: start 'generate' for ${directive.shape.getId.getName}")
 
-    val service = symbolProvider.toSymbol(model.getServiceShapes.asScala.head)
-    val index = TopDownIndex.of(model)
-    val operationsShapes = index.getContainedOperations(model.getServiceShapes.asScala.head)
+    val service = directive.symbolProvider.toSymbol(directive.model.getServiceShapes.asScala.head)
+    val index = TopDownIndex.of(directive.model)
+    val operationsShapes = index.getContainedOperations(directive.model.getServiceShapes.asScala.head)
 
     val inputOutputModels = operationsShapes.asScala.flatMap { operation =>
       Seq(operation.getInputShape.getName, operation.getOutputShape.getName)
     }
 
-    writer.write("package ${L}.generated.rules", serviceShape.getId.getNamespace)
+    writer.write("package ${L}.generated.rules", directive.shape.getId.getNamespace)
     writer.write("")
 
-    writer.write("import ${L}.generated.models.{${L}}", serviceShape.getId.getNamespace, inputOutputModels.toSeq.sorted.mkString(", "))
+    writer.write("import ${L}.generated.models.{${L}}", directive.shape.getId.getNamespace, inputOutputModels.toSeq.sorted.mkString(", "))
     writer.write("")
     writer.write("import javax.inject.Singleton")
     writer.write("")

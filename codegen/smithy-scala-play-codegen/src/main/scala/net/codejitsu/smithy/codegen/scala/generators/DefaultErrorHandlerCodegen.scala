@@ -1,19 +1,17 @@
 package net.codejitsu.smithy.codegen.scala.generators
 
-import net.codejitsu.smithy.codegen.scala.ScalaPlayWriter
-import software.amazon.smithy.model.shapes.ServiceShape
+import net.codejitsu.smithy.codegen.scala.{ScalaPlayContext, ScalaPlaySettings, ScalaPlayWriter}
+import software.amazon.smithy.codegen.core.directed.GenerateServiceDirective
 
 import java.util.logging.Logger
 
-class DefaultErrorHandlerCodegen(
-  val serviceShape: ServiceShape,
-  val writer: ScalaPlayWriter) {
-  val logger: Logger = Logger.getLogger(classOf[DefaultErrorHandlerCodegen].getName)
+object DefaultErrorHandlerCodegen {
+  val logger: Logger = Logger.getLogger(classOf[DefaultErrorHandlerCodegen.type].getName)
 
-  def generateDefaultErrorHandler(): Unit = {
-    logger.info(s"[DefaultErrorHandlerCodegen]: start 'generate' for ${serviceShape.getId.getName}")
+  def generateDefaultErrorHandler(directive: GenerateServiceDirective[ScalaPlayContext, ScalaPlaySettings], writer: ScalaPlayWriter): Unit = {
+    logger.info(s"[DefaultErrorHandlerCodegen]: start 'generate' for ${directive.shape.getId.getName}")
 
-    writer.write("package ${L}.generated.util", serviceShape.getId.getNamespace)
+    writer.write("package ${L}.generated.util", directive.shape.getId.getNamespace)
     writer.write("")
 
     // TODO mustache
