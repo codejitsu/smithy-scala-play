@@ -10,7 +10,7 @@ import scala.jdk.StreamConverters._
 case class ScalaPlaySettings(service: ShapeId)
 
 object ScalaPlaySettings {
-  final val SERVICE = "service"
+  private final val SERVICE = "service"
 
   def mkSettings(settings: ObjectNode, model: Model): ScalaPlaySettings = {
     val service = settings
