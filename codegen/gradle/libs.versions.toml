@@ -10,7 +10,6 @@ scala = "2.13.12"
 smithy-version = "1.53.0"
 
 [libraries]
-guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 scala-library = { module = "org.scala-lang:scala-library", version.ref = "scala" }
 
