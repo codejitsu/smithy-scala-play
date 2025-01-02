@@ -124,7 +124,7 @@ class SmithyScalaPlayCodegenPluginTest {
          |
          |@ImplementedBy(classOf[PokemonServiceRulesDefaultImpl])
          |trait PokemonServiceRules {
-         |    def getPokemon(getPokemonInput GetPokemonInput): GetPokemonOutput
+         |    def getPokemon(getPokemonInput: GetPokemonInput): GetPokemonOutput
          |}
          |
          |""".stripMargin
@@ -144,7 +144,7 @@ class SmithyScalaPlayCodegenPluginTest {
          |
          |@Singleton
          |class PokemonServiceRulesDefaultImpl extends PokemonServiceRules {
-         |    override def getPokemon(getPokemonInput GetPokemonInput): GetPokemonOutput = {
+         |    override def getPokemon(getPokemonInput: GetPokemonInput): GetPokemonOutput = {
          |        ???
          |    }
          |}
@@ -169,8 +169,8 @@ class SmithyScalaPlayCodegenPluginTest {
          |import net.codejitsu.smithy.generated.models.GetPokemonOutput.getPokemonOutputWrites
          |
          |@Singleton
-         |class PokemonServiceController @Inject()(val controllerComponents: ControllerComponents, val pokemonServiceRules PokemonServiceRules) extends BaseController {
-         |    def getPokemon(getPokemonInput GetPokemonInput): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+         |class PokemonServiceController @Inject()(val controllerComponents: ControllerComponents, val pokemonServiceRules: PokemonServiceRules) extends BaseController {
+         |    def getPokemon(getPokemonInput: GetPokemonInput): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
          |        val result = pokemonServiceRules.getPokemon(getPokemonInput)
          |        Ok(Json.toJson(result))
          |    }
