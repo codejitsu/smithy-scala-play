@@ -1,16 +1,15 @@
 package net.codejitsu.smithy.codegen.scala
 
 import software.amazon.smithy.codegen.core.{ReservedWordSymbolProvider, ReservedWordsBuilder, Symbol, SymbolDependency, SymbolProvider}
-import software.amazon.smithy.model.Model
 import software.amazon.smithy.model.shapes.{OperationShape, ServiceShape, Shape, ShapeVisitor}
 import software.amazon.smithy.utils.StringUtils
 
 import java.util.logging.Logger
 
-class ScalaPlaySymbolVisitor(model: Model, symbolProvider: SymbolProvider) extends ShapeVisitor.Default[Symbol] with SymbolProvider {
-  val logger = Logger.getLogger(classOf[ScalaPlaySymbolVisitor].getName)
+class ScalaPlaySymbolVisitor(symbolProvider: SymbolProvider) extends ShapeVisitor.Default[Symbol] with SymbolProvider {
+  val logger: Logger = Logger.getLogger(classOf[ScalaPlaySymbolVisitor].getName)
 
-  val escaper: ReservedWordSymbolProvider.Escaper = initEscaper()
+  private val escaper: ReservedWordSymbolProvider.Escaper = initEscaper()
 
   override def getDefault(shape: Shape): Symbol = symbolProvider.toSymbol(shape)
 
