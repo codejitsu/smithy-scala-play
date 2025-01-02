@@ -41,12 +41,6 @@ dependencies {
     api("software.amazon.smithy:smithy-waiters:$smithyVersion")
 }
 
-dependencies {
-    implementation(libs.smithy.model)
-    implementation(libs.smithy.codegen.core)
-    implementation(libs.smithy.utils)
-}
-
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
