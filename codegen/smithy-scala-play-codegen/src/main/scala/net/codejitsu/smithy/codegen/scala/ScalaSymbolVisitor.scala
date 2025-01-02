@@ -36,36 +36,92 @@ class ScalaSymbolVisitor(model: Model) extends ShapeVisitor[Symbol] with SymbolP
 
   override def blobShape(shape: BlobShape): Symbol = ???
 
-  override def booleanShape(shape: BooleanShape): Symbol = ???
+  override def booleanShape(shape: BooleanShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'booleanShape' for ${shape.getId.getName}")
+
+    Symbol.builder()
+      .putProperty("shape", shape)
+      .name("Boolean")
+      .build()
+  }
 
   override def listShape(shape: ListShape): Symbol = ???
 
   override def mapShape(shape: MapShape): Symbol = ???
 
-  override def byteShape(shape: ByteShape): Symbol = ???
+  override def byteShape(shape: ByteShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'byteShape' for ${shape.getId.getName}")
 
-  override def shortShape(shape: ShortShape): Symbol = ???
+    Symbol.builder()
+      .putProperty("shape", shape)
+      .name("Byte") // TODO Byte vs. byte in config
+      .build()
+  }
+
+  override def shortShape(shape: ShortShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'shortShape' for ${shape.getId.getName}")
+
+    Symbol.builder()
+      .putProperty("shape", shape)
+      .name("Short") // TODO Byte vs. byte in config
+      .build()
+  }
 
   override def integerShape(shape: IntegerShape): Symbol = {
     logger.info(s"[ScalaSymbolVisitor]: start 'integerShape' for ${shape.getId.getName}")
 
     Symbol.builder()
       .putProperty("shape", shape)
-      .name("Int")
+      .name("Int") // TODO Byte vs. byte in config
       .build()
   }
 
-  override def longShape(shape: LongShape): Symbol = ???
+  override def longShape(shape: LongShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'longShape' for ${shape.getId.getName}")
 
-  override def floatShape(shape: FloatShape): Symbol = ???
+    Symbol.builder()
+      .putProperty("shape", shape)
+      .name("Long") // TODO Byte vs. byte in config
+      .build()
+  }
+
+  override def floatShape(shape: FloatShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'floatShape' for ${shape.getId.getName}")
+
+    Symbol.builder()
+      .putProperty("shape", shape)
+      .name("Float") // TODO Byte vs. byte in config
+      .build()
+  }
 
   override def documentShape(shape: DocumentShape): Symbol = ???
 
-  override def doubleShape(shape: DoubleShape): Symbol = ???
+  override def doubleShape(shape: DoubleShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'doubleShape' for ${shape.getId.getName}")
 
-  override def bigIntegerShape(shape: BigIntegerShape): Symbol = ???
+    Symbol.builder()
+      .putProperty("shape", shape)
+      .name("Double") // TODO Byte vs. byte in config
+      .build()
+  }
 
-  override def bigDecimalShape(shape: BigDecimalShape): Symbol = ???
+  override def bigIntegerShape(shape: BigIntegerShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'bigIntegerShape' for ${shape.getId.getName}")
+
+    Symbol.builder()
+      .putProperty("shape", shape)
+      .name("BigInt")
+      .build()
+  }
+
+  override def bigDecimalShape(shape: BigDecimalShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'bigDecimalShape' for ${shape.getId.getName}")
+
+    Symbol.builder()
+      .putProperty("shape", shape)
+      .name("BigDecimal")
+      .build()
+  }
 
   override def operationShape(shape: OperationShape): Symbol = {
     logger.info(s"[ScalaSymbolVisitor]: start 'operationShape' for ${shape.getId.getName}")
@@ -134,5 +190,12 @@ class ScalaSymbolVisitor(model: Model) extends ShapeVisitor[Symbol] with SymbolP
     targetSymbol
   }
 
-  override def timestampShape(shape: TimestampShape): Symbol = ???
+  override def timestampShape(shape: TimestampShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'timestampShape' for ${shape.getId.getName}")
+
+    Symbol.builder()
+      .putProperty("shape", shape)
+      .name("Long") // TODO config different options: long vs. instant
+      .build()
+  }
 }

@@ -47,7 +47,7 @@ object StructureCodegen {
       s"${symbol.getName.head.toLower}${symbol.getName.substring(1)}", symbol.getName, symbol.getName)
 
     if (isInputShape) {
-      val identifier = directive.shape.getAllMembers.values().asScala.find(member => member.hasTrait("resourceIdentifier"))
+      val identifier = directive.shape.getAllMembers.values().asScala.headOption
 
       identifier.foreach { id =>
         writer.write("")
@@ -63,7 +63,11 @@ object StructureCodegen {
         writer.write("")
         writer.openBlock("override def unbind(key: String, $L: $L): String = {",
           s"${symbol.getName.head.toLower}${symbol.getName.substring(1)}", symbol.getName)
-        writer.write("$L.$L", s"${symbol.getName.head.toLower}${symbol.getName.substring(1)}", id.getMemberName)
+        if (id.getTarget.getName == "String") {
+          writer.write("$L.$L", s"${symbol.getName.head.toLower}${symbol.getName.substring(1)}", id.getMemberName)
+        } else {
+          writer.write("$L.$L.toString", s"${symbol.getName.head.toLower}${symbol.getName.substring(1)}", id.getMemberName)
+        }
         writer.closeBlock("}")
         writer.closeBlock("}")
       }
