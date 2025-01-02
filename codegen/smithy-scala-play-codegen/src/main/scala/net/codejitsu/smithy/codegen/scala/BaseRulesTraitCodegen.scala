@@ -7,6 +7,7 @@ import software.amazon.smithy.model.knowledge.TopDownIndex
 import software.amazon.smithy.model.shapes.ServiceShape
 import software.amazon.smithy.model.traits.HttpTrait
 
+import java.nio.file.Paths
 import java.util.logging.Logger
 import scala.jdk.CollectionConverters.SetHasAsScala
 
@@ -22,13 +23,15 @@ class ServiceCodegen(
   def generate(): Unit = {
     logger.info(s"[ServiceCodegen]: start 'generate' for ${shape.getId.getName}")
 
-    val namespace = shape.getId.getNamespace.split("\\.").mkString("/")
+    val namespace = shape.getId.getNamespace.split("\\.")
     val service = symbolProvider.toSymbol(model.getServiceShapes.asScala.head)
     val handler = service.expectProperty("handler", classOf[Symbol])
 
     // base trait
-    val pathToFileBaseRulesTrait = s"./app/$namespace/generated/rules/${service.getName}Rules.scala" // TODO this belongs to config (project structure)
-    writerDelegator.useFileWriter(pathToFileBaseRulesTrait, (writer: ScalaPlayWriter) => {
+    val pathBaseRules = namespace ++ Array("generated", "rules", s"${service.getName}Rules.scala")
+    val pathToFileBaseRulesTrait = Paths.get("app", pathBaseRules :_*).toString // TODO this belongs to config (project structure)
+
+    //writerDelegator.useFileWriter(pathToFileBaseRulesTrait, (writer: ScalaPlayWriter) => {
       writer.write("package ${L}.generated.rules", shape.getId.getNamespace)
       writer.write("")
       writer.write("import com.google.inject.ImplementedBy")
@@ -61,10 +64,12 @@ class ServiceCodegen(
         }
       }
       writer.closeBlock("}")
-    })
-
+    //})
+/*
     // default implementation
-    val pathToFileDefaultRulesTrait = s"./app/$namespace/generated/rules/${service.getName}RulesDefaultImpl.scala" // TODO this belongs to config (project structure)
+    val pathDefaultRules = namespace ++ Array("generated", "rules", s"${service.getName}RulesDefaultImpl.scala")
+    val pathToFileDefaultRulesTrait = Paths.get("app", pathDefaultRules :_*).toString   // TODO this belongs to config (project structure)
+
     writerDelegator.useFileWriter(pathToFileDefaultRulesTrait, (writer: ScalaPlayWriter) => {
       writer.write("package ${L}.generated.rules", shape.getId.getNamespace)
       writer.write("")
@@ -104,7 +109,8 @@ class ServiceCodegen(
     })
 
     // controller
-    val pathToFileController = s"./app/$namespace/generated/controllers/${handler.getName}.scala" // TODO this belongs to config (project structure)
+    val pathController = namespace ++ Array("generated", "controllers", s"${handler.getName}.scala")
+    val pathToFileController = Paths.get("app", pathController :_*).toString  // TODO this belongs to config (project structure)
 
     writerDelegator.useFileWriter(pathToFileController, (writer: ScalaPlayWriter) => {
       writer.write("package ${L}.generated.controllers", shape.getId.getNamespace)
@@ -161,7 +167,8 @@ class ServiceCodegen(
     })
 
     // default error handler
-    val pathToFileErrorHandler = s"./app/$namespace/generated/util/ErrorHandler.scala" // TODO this belongs to config (project structure)
+    val pathDefaultErrorHandler = namespace ++ Array("generated", "util", "ErrorHandler.scala")
+    val pathToFileErrorHandler = Paths.get("app", pathDefaultErrorHandler :_*).toString  // TODO this belongs to config (project structure)
 
     writerDelegator.useFileWriter(pathToFileErrorHandler, (writer: ScalaPlayWriter) => {
       writer.write("package ${L}.generated.util", shape.getId.getNamespace)
@@ -198,7 +205,7 @@ class ServiceCodegen(
     })
 
     // sbt
-    val pathToFileSbt = s"./build.sbt" // TODO this belongs to config (project structure)
+    val pathToFileSbt = Paths.get("build.sbt").toString // TODO this belongs to config (project structure)
 
     writerDelegator.useFileWriter(pathToFileSbt, (writer: ScalaPlayWriter) => {
       // TODO config
@@ -221,8 +228,8 @@ class ServiceCodegen(
       writer.write(content)
     })
 
-    // sbt
-    val pathToConf = s"./conf/application.conf" // TODO this belongs to config (project structure)
+    // config
+    val pathToConf = Paths.get("conf", "application.conf").toString // TODO this belongs to config (project structure)
 
     writerDelegator.useFileWriter(pathToConf, (writer: ScalaPlayWriter) => {
       // TODO config
@@ -235,7 +242,7 @@ class ServiceCodegen(
     })
 
     // routes
-    val pathToRoutes = "./conf/routes" // TODO this belongs to config (project structure)
+    val pathToRoutes = Paths.get("conf", "routes").toString // TODO this belongs to config (project structure)
 
     writerDelegator.useFileWriter(pathToRoutes, (writer: ScalaPlayWriter) => {
       val index = TopDownIndex.of(model)
@@ -257,7 +264,7 @@ class ServiceCodegen(
     })
 
     // build.properties
-    val pathToBuildProperties = s"./project/build.properties" // TODO this belongs to config (project structure)
+    val pathToBuildProperties = Paths.get("project", "build.properties").toString // TODO this belongs to config (project structure)
 
     writerDelegator.useFileWriter(pathToBuildProperties, (writer: ScalaPlayWriter) => {
       // TODO config
@@ -271,7 +278,7 @@ class ServiceCodegen(
     })
 
     // plugins.sbt
-    val pathToPluginsSbt = s"./project/plugins.sbt" // TODO this belongs to config (project structure)
+    val pathToPluginsSbt = Paths.get("project", "plugins.sbt").toString // TODO this belongs to config (project structure)
 
     writerDelegator.useFileWriter(pathToPluginsSbt, (writer: ScalaPlayWriter) => {
       // TODO config
@@ -284,5 +291,6 @@ class ServiceCodegen(
 
       writer.write(content)
     })
+*/
   }
 }
