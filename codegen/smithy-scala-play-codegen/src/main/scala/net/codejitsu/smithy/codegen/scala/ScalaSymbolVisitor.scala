@@ -45,7 +45,16 @@ class ScalaSymbolVisitor(model: Model) extends ShapeVisitor[Symbol] with SymbolP
       .build()
   }
 
-  override def listShape(shape: ListShape): Symbol = ???
+  override def listShape(shape: ListShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'listShape' for ${shape.getId.getName}")
+
+    val target = toSymbol(shape.getMember())
+
+    Symbol.builder()
+      .putProperty("shape", target)
+      .name(s"Seq[${target.getName}]")
+      .build()
+  }
 
   override def mapShape(shape: MapShape): Symbol = ???
 
