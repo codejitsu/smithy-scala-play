@@ -69,6 +69,29 @@
                     }
                 }
             }
+        },
+        "maps-service": {
+            "transforms": [
+                {
+                    "name": "includeServices",
+                    "args": {
+                        "services": [
+                            "net.codejitsu.smithy#ExampleMaps"
+                        ]
+                    }
+                }
+            ],
+            "plugins": {
+                "scala-play-server-codegen": {
+                    "service": "net.codejitsu.smithy#ExampleMaps",
+                    "package": "pokemon",
+                    "packageVersion": "0.0.1",
+                    "packageJson": {
+                        "license": "Apache-2.0",
+                        "private": true
+                    }
+                }
+            }
         }
     },
     "plugins": {

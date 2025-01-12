@@ -52,11 +52,23 @@ class ScalaSymbolVisitor(model: Model) extends ShapeVisitor[Symbol] with SymbolP
 
     Symbol.builder()
       .putProperty("shape", target)
-      .name(s"Seq[${target.getName}]")
+      .name(s"Seq[${target.getName}]") // TODO Seq vs List vs Vector
       .build()
   }
 
-  override def mapShape(shape: MapShape): Symbol = ???
+  override def mapShape(shape: MapShape): Symbol = {
+    logger.info(s"[ScalaSymbolVisitor]: start 'mapShape' for ${shape.getId.getName}")
+
+    val key = toSymbol(shape.getKey)
+    val value = toSymbol(shape.getValue)
+
+    Symbol.builder()
+      .putProperty("shape", shape)
+      .name(s"Map[${key.getName}, ${value.getName}]") // TODO Map implementation
+      .addReference(key)
+      .addReference(value)
+      .build()
+  }
 
   override def byteShape(shape: ByteShape): Symbol = {
     logger.info(s"[ScalaSymbolVisitor]: start 'byteShape' for ${shape.getId.getName}")
